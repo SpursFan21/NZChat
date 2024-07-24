@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Middleware
 app.use(express.json());
@@ -18,6 +18,10 @@ app.use(express.json());
 // WebSocket connection
 io.on('connection', (socket) => {
   console.log('A user connected');
+
+  socket.on('sendMessage', (message) => {
+    io.emit('message', message);
+  });
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
@@ -27,3 +31,4 @@ io.on('connection', (socket) => {
 // Start server
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
