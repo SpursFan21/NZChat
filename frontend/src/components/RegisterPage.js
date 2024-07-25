@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 function RegisterPage() {
   const [username, setUsername] = useState('');
@@ -7,11 +8,14 @@ function RegisterPage() {
   const [password, setPassword] = useState('');
   const history = useHistory();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    // Perform registration logic (e.g., API call)
-    // On success:
-    history.push('/');
+    try {
+      await axios.post('/register', { username, email, password });
+      history.push('/');
+    } catch (error) {
+      console.error('Registration error', error);
+    }
   };
 
   return (

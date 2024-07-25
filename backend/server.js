@@ -1,9 +1,13 @@
-// backend/server.js
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
+
+const User = require('./models/User'); // Updated to use your existing file
+const userRoutes = require('./routes/user'); // Import the user routes
 
 const app = express();
 const server = http.createServer(app);
@@ -13,12 +17,12 @@ const io = socketIo(server);
 const uri = process.env.MONGO_URI;
 
 // Options for Mongoose client
-const clientOptions = { 
-  serverApi: { 
-    version: '1', 
-    strict: true, 
-    deprecationErrors: true 
-  } 
+const clientOptions = {
+  serverApi: {
+    version: '1',
+    strict: true,
+    deprecationErrors: true
+  }
 };
 
 // Connect to MongoDB
@@ -33,11 +37,8 @@ mongoose.connect(uri, clientOptions)
 // Middleware
 app.use(express.json());
 
-// Routes
-const userRoutes = require('./routes/users');
-const chatroomRoutes = require('./routes/chatrooms');
-app.use('/api/users', userRoutes);
-app.use('/api/chatrooms', chatroomRoutes);
+// Use the user routes
+app.use('/api/users', userRoutes); // Use the user routes
 
 // WebSocket connection
 io.on('connection', (socket) => {
