@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './ChatroomsPage.css';
 import axios from 'axios';
 
@@ -9,12 +9,12 @@ const socket = io('http://localhost:8080');
 function ChatroomsPage() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      history.push('/');
+      navigate('/');
       return;
     }
 
@@ -22,15 +22,20 @@ function ChatroomsPage() {
     axios.get('/validateToken', { headers: { Authorization: `Bearer ${token}` } })
       .then(response => {
         if (!response.data.valid) {
-          history.push('/');
+          navigate('/');
         }
       })
-      .catch(() => history.push('/'));
+      .catch(() => navigate('/'));
 
     socket.on('message', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
-  }, [history]);
+
+    // Clean up socket connection
+    return () => {
+      socket.off('message');
+    };
+  }, [navigate]);
 
   const sendMessage = (e) => {
     e.preventDefault();
