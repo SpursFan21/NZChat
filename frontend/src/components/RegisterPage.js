@@ -11,7 +11,7 @@ function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/register', { username, email, password });
+      await axios.post('/api/users/register', { username, email, password }); // Updated route
       navigate('/');
     } catch (error) {
       console.error('Registration error', error);
