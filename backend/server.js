@@ -43,14 +43,13 @@ mongoose.connect(uri, clientOptions)
   });
 
 // Middleware
-app.use(express.json());
-
-// Configure CORS
 app.use(cors({
   origin: 'http://localhost:3000', // Adjust as necessary
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.use(express.json()); // Middleware to parse JSON bodies
 
 // Use the user routes
 app.use('/api/users', userRoutes);
