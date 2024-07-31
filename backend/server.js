@@ -44,7 +44,7 @@ mongoose.connect(uri, clientOptions)
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3000', // Adjust as necessary
+  origin: 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
